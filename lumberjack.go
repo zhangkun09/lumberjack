@@ -36,9 +36,13 @@ import (
 )
 
 const (
-	backupTimeFormat = "2006-01-02T15-04-05.000"
-	compressSuffix   = ".gz"
-	defaultMaxSize   = 100
+	compressSuffix = ".gz"
+	defaultMaxSize = 100
+)
+
+var (
+	// change this variable if you need
+	BackupTimeFormat = "20060102.15"
 )
 
 // ensure we always implement io.WriteCloser
@@ -254,7 +258,7 @@ func backupName(name string, local bool) string {
 		t = t.UTC()
 	}
 
-	timestamp := t.Format(backupTimeFormat)
+	timestamp := t.Format(BackupTimeFormat)
 	return filepath.Join(dir, fmt.Sprintf("%s-%s%s", prefix, timestamp, ext))
 }
 
@@ -438,7 +442,7 @@ func (l *Logger) timeFromName(filename, prefix, ext string) (time.Time, error) {
 		return time.Time{}, errors.New("mismatched extension")
 	}
 	ts := filename[len(prefix) : len(filename)-len(ext)]
-	return time.Parse(backupTimeFormat, ts)
+	return time.Parse(BackupTimeFormat, ts)
 }
 
 // max returns the maximum size in bytes of log files before rolling.
